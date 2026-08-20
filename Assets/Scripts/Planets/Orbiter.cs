@@ -3,25 +3,21 @@ using UnityEngine;
 
 namespace Planets
 {
-    public abstract class OrbiterBase : MonoBehaviour
+    public class Orbiter : CelestialBody
     {
         protected const float GravitationalConstant = 1f;
-        [SerializeField] protected string _orbiterName;
-        [SerializeField] protected float _mass;
-
-        protected Vector3 _velocity;
         protected Vector3 _accelaration = Vector3.zero;
-        protected Planet _primary;
+        private Vector3 velocity;
+        private double perihelion;
 
-        public virtual void Init(PlanetDetails details)
+        // Composition via Object Association instead of Inheritence
+        private CelestialBody primary;
+
+
+        public Orbiter(CelestialData data, double perihelion, CelestialBody primary)
+            : base(data)
         {
-            _orbiterName = details.orbiterName;
-            _mass = details.mass;
-            _velocity = details.initialVelocity;
-            _primary = details.primary;
-
-            transform.position = details.initialPosition;
-            gameObject.name = _orbiterName;
+            this.perihelion = perihelion;
         }
 
         //Debug
@@ -31,34 +27,41 @@ namespace Planets
 
         private readonly Queue<Vector3> _positionHistory = new();
 
-        private void FixedUpdate()
+
+
+        public void PhysicsUpdate()
         {
-            if (!_primary) return;
+            if (primary == null) return;
 
             _accelaration = GetAcceleration();
-            _velocity += _accelaration * Time.fixedDeltaTime;
-            transform.position += _velocity * Time.fixedDeltaTime;
+            velocity += _accelaration * Time.fixedDeltaTime;
+            visualTransform.position += velocity * Time.fixedDeltaTime;
 
-            _positionHistory.Enqueue(transform.position);
+            _positionHistory.Enqueue(visualTransform.position);
 
             // Remove older points so the history doesn't grow forever
             if (_positionHistory.Count > maxHistoryPoints)
             {
                 _positionHistory.Dequeue();
             }
+
+            Data.position = visualTransform.position;
+            
+            OnDrawGizmos();
         }
 
         private Vector3 GetAcceleration()
         {
             if (GetDirectionToSun.sqrMagnitude < 0.01f) return Vector3.zero;
 
+            // TODO : REMOVE _DETAILS
             var totalAcceleration =
-                GravitationalConstant * _primary._mass / GetDirectionToSun.sqrMagnitude;
+                GravitationalConstant * primary.Data.mass / GetDirectionToSun.sqrMagnitude;
 
             return GetDirectionToSun.normalized * totalAcceleration;
         }
 
-        private Vector3 GetDirectionToSun => _primary.transform.position - transform.position;
+        private Vector3 GetDirectionToSun => primary.GetPosition() - visualTransform.position;
 
         private void OnDrawGizmos()
         {

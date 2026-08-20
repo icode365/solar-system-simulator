@@ -1,66 +1,98 @@
-using System;
 using System.Collections.Generic;
 using Planets;
 using Planets.Util;
 using UnityEngine;
 
+/// <summary>
+/// Boostrapper Class
+/// </summary>
 public class BigBang : MonoBehaviour
 {
     public float earthInitVelocity = 10f;
     public float distanceFromSun = 150f;
+
+    // TODO Move to SolarSystem Manager
+    public float SimulationScale = 10000f;
+    [Range(0.1f, 1f)] public float SimulationTime = 0.25f;
+
     public TextAsset planetdataJson;
 
     private readonly HashSet<string> SolarSystemPlanetIds = new()
     {
-        "mercury", "venus", "earth", "mars", "jupiter", "saturn", "uranus", "neptune", "sun"
+        "mercury", "venus", "earth", "mars", "jupiter", "saturn", "uranus", "neptune"
     };
 
-    private List<PlanetDetails> SolarSystem = new();
-    private Planet sun;
+    private List<Orbiter> activePlanets = new();
+
+    // ✅ 1. Add Sun ID 
+    private Sun _sun;
 
     private void Start()
     {
-        GetPlanetData();
-        CreateSolarSystem();
+        var solarSystemData = GetSolarSystemData();
+
+        CreateSun(solarSystemData);
+        //✅  4. Send that data to CreateSolarSystemFrom(PlanetData)
+        CreateSolarSystemFrom(solarSystemData);
+        CreateTime();
     }
 
-    private void CreateSolarSystem()
+    public void CreateTime()
     {
-        // TODO : CREATE ANOTHER FLOW TO CREATE AND ASSIGN THE SUN
-        foreach (var planet in SolarSystem)
-        {
-            CreatePlanet(planet);
-        }
+        var solarSystemManager = new GameObject();
+        var time = solarSystemManager.AddComponent<SolarSystemManager>();
+        time.FixedFrameUpdated += UpdatePlanetPhysics; //TODO All planets update visuals
     }
 
-    private void GetPlanetData()
-    {
-        var planetData = PlanetDataParser.Parse(planetdataJson.text);
-        Debug.Log(planetData.bodies.Length);
+    private void UpdatePlanetPhysics() => activePlanets.ForEach(v => v.PhysicsUpdate());
 
-        foreach (var planet in planetData.bodies)
+    private void CreateSolarSystemFrom(Bodies solarSystemData)
+    {
+        foreach (var planet in solarSystemData.bodies)
         {
             if (SolarSystemPlanetIds.Contains(planet.englishName.ToLower()))
             {
-                Debug.Log("Planet : " + planet.englishName + " | Mass: " + planet.mass.massValue);
-                var planetDetails = new PlanetDetails()
+                var planetDetails = new CelestialData()
                 {
-                    orbiterName = planet.englishName,
-                    mass = planet.mass.massValue,
-                    initialPosition = Vector3.zero,
-                    initialVelocity = Vector3.zero,
-                    primary = sun
+                    bodyName = planet.englishName,
+                    mass = planet.mass.massValue / SimulationScale,
+                    position = _sun.GetPosition() + new Vector3(planet.perihelion / SimulationScale, 0f, 0f),
+                    radius = planet.meanRadius / SimulationScale
                 };
-                
-                SolarSystem.Add(planetDetails);
+
+                var perihelion = planet.perihelion / SimulationScale;
+                CreatePlanet(planetDetails, perihelion, _sun);
             }
         }
     }
 
-    private void CreatePlanet(PlanetDetails details)
+    private Bodies GetSolarSystemData() =>
+        // ✅ 1. Only return Planets data
+        PlanetDataParser.Parse(planetdataJson.text);
+
+    private void CreatePlanet(CelestialData details, double perihelion, CelestialBody primary)
     {
-        var planetObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        var planet = planetObject.AddComponent<Planet>();
-        planet.Init(details);
+        var planet = new Orbiter(details, perihelion, primary);
+        activePlanets.Add(planet);
+    }
+
+    //✅  2. Use "Sun" Class instead of Planet
+    private void CreateSun(Bodies solarSystemData)
+    {
+        // TODO : add sun's mass and basic details for gravity calculation
+        foreach (var planet in solarSystemData.bodies)
+        {
+            if (planet.englishName.ToLower() == "sun")
+            {
+                var planetDetails = new CelestialData()
+                {
+                    bodyName = planet.englishName,
+                    mass = planet.mass.massValue / SimulationScale,
+                    position = Vector3.zero
+                };
+
+                _sun = new Sun(planetDetails);
+            }
+        }
     }
 }

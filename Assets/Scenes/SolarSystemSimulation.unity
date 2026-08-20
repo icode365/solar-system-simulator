@@ -622,7 +622,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BigBang
   earthInitVelocity: 2
   distanceFromSun: 50
-  planetData: []
+  SimulationScale: 10000000
+  SimulationTime: 0.25
   planetdataJson: {fileID: 4900000, guid: f2540e92cce010544b242edfc172bfef, type: 3}
 --- !u!4 &1844473338
 Transform:
@@ -657,7 +658,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!64 &2069960622
 MeshCollider:
   m_ObjectHideFlags: 0

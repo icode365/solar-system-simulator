@@ -1,6 +1,8 @@
+using UnityEngine;
+
 namespace Planets
 {
-    public class Moon : OrbiterBase
+    public class Moon : MonoBehaviour
     {
         
     }

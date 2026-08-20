@@ -18,6 +18,7 @@ namespace Planets.Util
         public Moons[] moons;
         public Mass mass;
         public float meanRadius;
+        public float perihelion;
     }
 
     [Serializable]
