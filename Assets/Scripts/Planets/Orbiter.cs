@@ -3,79 +3,64 @@ using UnityEngine;
 
 namespace Planets
 {
+    public class OrbitData
+    {
+        public float eccentricity;
+        public int semimajorAxis;
+        public float sideralOrbit;
+        // Composition via Object Association instead of Inheritence
+        public CelestialBody primary;
+        public double perihelion;
+    }
+
     public class Orbiter : CelestialBody
     {
         protected const float GravitationalConstant = 1f;
-        protected Vector3 _accelaration = Vector3.zero;
         private Vector3 velocity;
-        private double perihelion;
 
-        // Composition via Object Association instead of Inheritence
-        private CelestialBody primary;
-
-
-        public Orbiter(CelestialData data, double perihelion, CelestialBody primary)
+        private OrbitData _orbitData;
+        
+        public Orbiter(CelestialData data, OrbitData orbiterData)
             : base(data)
         {
-            this.perihelion = perihelion;
+            _orbitData = orbiterData;
         }
 
-        //Debug
 
-        [Header("Live Trail Settings")] public bool showLiveTrail = true;
-        public int maxHistoryPoints = 200; // How many past positions to remember
-
-        private readonly Queue<Vector3> _positionHistory = new();
-
-
+        private float _timer = 0f;
 
         public void PhysicsUpdate()
         {
-            if (primary == null) return;
+            if (_orbitData.primary == null) return;
 
-            _accelaration = GetAcceleration();
-            velocity += _accelaration * Time.fixedDeltaTime;
-            visualTransform.position += velocity * Time.fixedDeltaTime;
+            // 1. Advance time and calculate Mean Anomaly (M)
+            _timer += Time.deltaTime;
+            float meanAnomaly = (2f * Mathf.PI / _orbitData.sideralOrbit) * _timer;
 
-            _positionHistory.Enqueue(visualTransform.position);
+            // 2. Solve Kepler's Equation for Eccentric Anomaly (E) using Newton's method
+            float eccentricAnomaly = SolveKepler(meanAnomaly, _orbitData.eccentricity);
 
-            // Remove older points so the history doesn't grow forever
-            if (_positionHistory.Count > maxHistoryPoints)
-            {
-                _positionHistory.Dequeue();
-            }
+            // 3. Calculate 2D position in the orbital plane
+            // The Sun sits at one of the focal points, which is shifted by (a * e)
+            float x = _orbitData.semimajorAxis * (Mathf.Cos(eccentricAnomaly) - _orbitData.eccentricity);
+            float z = _orbitData.semimajorAxis * Mathf.Sqrt(1f - _orbitData.eccentricity * _orbitData.eccentricity) * Mathf.Sin(eccentricAnomaly);
 
-            Data.position = visualTransform.position;
-            
-            OnDrawGizmos();
+                // TODO : Add Function to set the position
+            visualTransform.transform.position = _orbitData.primary.GetPosition() + new Vector3(x, 0f, z);
+
+            Data.position = visualTransform.transform.position;
         }
 
-        private Vector3 GetAcceleration()
+        // Iterative solver for Kepler's Equation: M = E - e*sin(E)
+        private float SolveKepler(float M, float e)
         {
-            if (GetDirectionToSun.sqrMagnitude < 0.01f) return Vector3.zero;
-
-            // TODO : REMOVE _DETAILS
-            var totalAcceleration =
-                GravitationalConstant * primary.Data.mass / GetDirectionToSun.sqrMagnitude;
-
-            return GetDirectionToSun.normalized * totalAcceleration;
-        }
-
-        private Vector3 GetDirectionToSun => primary.GetPosition() - visualTransform.position;
-
-        private void OnDrawGizmos()
-        {
-            if (showLiveTrail && _positionHistory.Count > 1)
+            float E = M; // Initial guess
+            for (int i = 0; i < 5; i++) // 5 iterations is highly accurate for planetary orbits
             {
-                Gizmos.color = Color.yellow;
-
-                Vector3[] pointsArray = _positionHistory.ToArray();
-                for (int i = 0; i < pointsArray.Length - 1; i++)
-                {
-                    // Draw a continuous line connecting all past physical locations
-                    Gizmos.DrawLine(pointsArray[i], pointsArray[i + 1]);
-                }
+                E = E - (E - e * Mathf.Sin(E) - M) / (1f - e * Mathf.Cos(E));
             }
+
+            return E;
         }
     }
 }

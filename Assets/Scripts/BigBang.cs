@@ -8,10 +8,8 @@ using UnityEngine;
 /// </summary>
 public class BigBang : MonoBehaviour
 {
-    public float earthInitVelocity = 10f;
-    public float distanceFromSun = 150f;
-
     // TODO Move to SolarSystem Manager
+    public float SimulationDistanceScale = 10000f;
     public float SimulationScale = 10000f;
     [Range(0.1f, 1f)] public float SimulationTime = 0.25f;
 
@@ -55,13 +53,21 @@ public class BigBang : MonoBehaviour
                 var planetDetails = new CelestialData()
                 {
                     bodyName = planet.englishName,
-                    mass = planet.mass.massValue / SimulationScale,
-                    position = _sun.GetPosition() + new Vector3(planet.perihelion / SimulationScale, 0f, 0f),
+                    mass = planet.mass.massValue / SimulationDistanceScale,
+                    position = _sun.GetPosition() + new Vector3(planet.perihelion / SimulationDistanceScale, 0f, 0f),
                     radius = planet.meanRadius / SimulationScale
                 };
 
-                var perihelion = planet.perihelion / SimulationScale;
-                CreatePlanet(planetDetails, perihelion, _sun);
+                OrbitData orbitData = new ()
+                {
+                    eccentricity = planet.eccentricity,
+                    semimajorAxis = planet.semimajorAxis / (int)SimulationDistanceScale,
+                    sideralOrbit = planet.sideralOrbit,
+                    primary = _sun
+                };
+                
+                var perihelion = planet.perihelion / SimulationDistanceScale;
+                CreatePlanet(planetDetails, orbitData);
             }
         }
     }
@@ -70,9 +76,9 @@ public class BigBang : MonoBehaviour
         // ✅ 1. Only return Planets data
         PlanetDataParser.Parse(planetdataJson.text);
 
-    private void CreatePlanet(CelestialData details, double perihelion, CelestialBody primary)
+    private void CreatePlanet(CelestialData details, OrbitData orbitData)
     {
-        var planet = new Orbiter(details, perihelion, primary);
+        var planet = new Orbiter(details, orbitData);
         activePlanets.Add(planet);
     }
 
@@ -87,7 +93,8 @@ public class BigBang : MonoBehaviour
                 var planetDetails = new CelestialData()
                 {
                     bodyName = planet.englishName,
-                    mass = planet.mass.massValue / SimulationScale,
+                    mass = planet.mass.massValue / SimulationDistanceScale,
+                    radius = planet.meanRadius / SimulationScale,
                     position = Vector3.zero
                 };
 

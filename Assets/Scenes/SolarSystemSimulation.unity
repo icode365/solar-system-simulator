@@ -620,9 +620,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c2c381fd2355f44fb50f1c458485bff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BigBang
-  earthInitVelocity: 2
-  distanceFromSun: 50
-  SimulationScale: 10000000
+  SimulationDistanceScale: 100000
+  SimulationScale: 1000
   SimulationTime: 0.25
   planetdataJson: {fileID: 4900000, guid: f2540e92cce010544b242edfc172bfef, type: 3}
 --- !u!4 &1844473338

@@ -12,7 +12,7 @@ public class CelestialBody
 {
     public CelestialData Data { get; private set; }
 
-    protected Transform visualTransform;
+    protected CelestialBodyVisuals visualTransform;
 
     public CelestialBody(CelestialData data)
     {
@@ -22,10 +22,11 @@ public class CelestialBody
 
     private void ConfigureBodyVisual()
     {
-        visualTransform = GameObject.CreatePrimitive(PrimitiveType.Sphere).transform;
+        var planetObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        visualTransform = planetObject.AddComponent<CelestialBodyVisuals>();
         visualTransform.name = Data.bodyName;
-        visualTransform.localScale = Vector3.one * Data.radius;
-        visualTransform.position = Data.position;
+        visualTransform.transform.localScale = Vector3.one * Data.radius;
+        visualTransform.transform.position = Data.position;
     }
 
     public Vector3 GetPosition() => Data.position;

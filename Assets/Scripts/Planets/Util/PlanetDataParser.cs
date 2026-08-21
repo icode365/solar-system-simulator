@@ -19,6 +19,9 @@ namespace Planets.Util
         public Mass mass;
         public float meanRadius;
         public float perihelion;
+        public float eccentricity;
+        public int semimajorAxis;
+        public float sideralOrbit;
     }
 
     [Serializable]
