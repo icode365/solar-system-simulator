@@ -20,8 +20,8 @@ namespace Planets
 
         private OrbitData _orbitData;
         
-        public Orbiter(CelestialData data, OrbitData orbiterData)
-            : base(data)
+        public Orbiter(CelestialData data, OrbitData orbiterData, Material material)
+            : base(data, material)
         {
             _orbitData = orbiterData;
         }

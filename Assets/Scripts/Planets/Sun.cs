@@ -6,8 +6,8 @@ namespace Planets
     {
         // It could have init function to create a MonoBehaviour Sphere planet named SunVisual
 
-        public Sun(CelestialData data)
-            : base(data)
+        public Sun(CelestialData data, Material material)
+            : base(data, material)
         {
             Debug.Log("Sun Created");
         }
