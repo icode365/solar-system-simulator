@@ -1,5 +1,3 @@
-using System;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -23,6 +21,12 @@ namespace SpaceShip
         public float LeanAmount { get; } = 25f; // For visual tilting
         public float SpeedBootMul { get; } = 2f;
 
+        public SpaceShipState()
+        {
+            Position = new Vector3(0, 0, -2000f);
+            Rotation = Quaternion.identity;
+        }
+        
         public void SetShipState(Vector3 position, Quaternion rotation)
         {
             Position = position;
@@ -77,7 +81,7 @@ namespace SpaceShip
 
         public void OnMove(InputAction.CallbackContext context)
         {
-            Debug.Log(" On Move : " + context.ReadValue<Vector2>());
+            // Debug.Log(" On Move : " + context.ReadValue<Vector2>());
             _pendingInput.XYInput = context.ReadValue<Vector2>();
         }
 
@@ -128,12 +132,18 @@ namespace SpaceShip
             float rollLean = -x * _shipState.LeanAmount;
             Quaternion visualLean = Quaternion.Euler(0, 0, rollLean);
 
-            _shipState.Rotation *= Quaternion.Euler(x, y, 0) * visualLean;
+            _shipState.Rotation *= Quaternion.Euler(y, x, 0) * visualLean;
             var forward = _shipState.Rotation * Vector3.forward;
             Vector3 velocity =
-                forward * speedBoostMultiplier;
+                forward * (_shipState.ConstantForwardSpeed * speedBoostMultiplier);
 
             _shipState.Position += velocity * Time.deltaTime;
+        }
+
+        private void OnGUI()
+        {
+            Rect pos = new Rect(10, 10, 500, 500);
+            GUI.Label(pos, $"{_shipState.Position} \n {_shipState.Rotation}" );
         }
     }
 }
