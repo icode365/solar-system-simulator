@@ -1,4 +1,5 @@
 using System;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -10,9 +11,23 @@ namespace SpaceShip
         // Position
         // speed
         // forwardDirection
-        public Vector3 position;
-        public Vector3 forwardDirection;
-        public float speed;
+        // Movement Data
+        public Vector3 Position { get; set; }
+        public Vector3 Velocity { get; set; }
+        public Quaternion Rotation { get; set; }
+
+        // Configuration Constants
+        public float ConstantForwardSpeed { get; } = 5f;
+        public float TurnSpeed { get; } = 10f;
+        public float ManeuverSpeed { get; } = 30f;
+        public float LeanAmount { get; } = 25f; // For visual tilting
+        public float SpeedBootMul { get; } = 2f;
+
+        public void SetShipState(Vector3 position, Quaternion rotation)
+        {
+            Position = position;
+            Rotation = rotation;
+        }
     }
 
     public class ShipInput
@@ -26,7 +41,7 @@ namespace SpaceShip
     {
         public SpaceShipInput_Actions spaceShipInput;
         private SpaceShipInput_Actions.PlayerActions _playerActions;
-        private SpaceShipState _shipState;
+        public SpaceShipState _shipState { get; private set; }
         private ShipInput _pendingInput;
 
         private void Awake()
@@ -49,7 +64,7 @@ namespace SpaceShip
         {
             spaceShipInput.Enable();
         }
-        
+
         private void OnDisable()
         {
             spaceShipInput.Disable();
@@ -68,48 +83,57 @@ namespace SpaceShip
 
         public void OnLook(InputAction.CallbackContext context)
         {
-            Debug.Log(" OnLook : " + context.ReadValue<Vector2>());
+            // Debug.Log(" OnLook : " + context.ReadValue<Vector2>());
             _pendingInput.lookInput = context.ReadValue<Vector2>();
         }
 
         public void OnAttack(InputAction.CallbackContext context)
         {
-            Debug.Log(" OnAttack : " + context.performed);
+            // Debug.Log(" OnAttack : " + context.performed);
         }
 
         public void OnInteract(InputAction.CallbackContext context)
         {
-            Debug.Log(" OnInteract : " + context.performed);
+            // Debug.Log(" OnInteract : " + context.performed);
         }
 
         public void OnSprint(InputAction.CallbackContext context)
         {
-            Debug.Log(" OnSprint : " + context.performed);
+            // Debug.Log(" OnSprint : " + context.performed);
             _pendingInput.boostInput = context.performed;
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
             //Update the vehicle based on passed state
-            UpdateShipMovement(_pendingInput);
-            //Update the camera position based on passed mouse state (or create another camera script)
+            UpdateShipState(_pendingInput);
+            //Update the camera position based on the passed mouse state (or create another camera script)
         }
 
         private void LateUpdate()
         {
             //update the shipState
-            _shipState.position = transform.position;
-            _shipState.forwardDirection = transform.forward;
         }
 
-        private void UpdateShipMovement(ShipInput input)
+        private void UpdateShipState(ShipInput input)
         {
-            var speedBoostMultiplier = input.boostInput ? 2 : 1;
-            var x = input.XYInput.x * speedBoostMultiplier;
-            var y = input.XYInput.y * speedBoostMultiplier;
-            
-            transform.Translate(x * Time.deltaTime, 0, y * Time.deltaTime);
-            transform.Rotate(0, input.lookInput.x * Time.deltaTime, 0);
+            var speedBoostMultiplier = input.boostInput ? _shipState.SpeedBootMul : 1;
+            var x =
+                input.XYInput.x * _shipState.TurnSpeed * Time.deltaTime;
+            var y =
+                input.XYInput.y * _shipState.TurnSpeed * Time.deltaTime;
+
+
+            // Visual Juice: Add a roll tilt when turning left or right
+            float rollLean = -x * _shipState.LeanAmount;
+            Quaternion visualLean = Quaternion.Euler(0, 0, rollLean);
+
+            _shipState.Rotation *= Quaternion.Euler(x, y, 0) * visualLean;
+            var forward = _shipState.Rotation * Vector3.forward;
+            Vector3 velocity =
+                forward * speedBoostMultiplier;
+
+            _shipState.Position += velocity * Time.deltaTime;
         }
     }
 }
