@@ -59,15 +59,15 @@ public class BigBang : MonoBehaviour
                 var planetDetails = new CelestialData()
                 {
                     bodyName = planet.englishName,
-                    mass = planet.mass.massValue / SimulationDistanceScale,
-                    position = _sun.GetPosition() + new Vector3(planet.perihelion / SimulationDistanceScale, 0f, 0f),
-                    radius = planet.meanRadius / SimulationScale
+                    mass = planet.mass.massValue * SimulationDistanceScale,
+                    position = _sun.GetPosition() + new Vector3(planet.perihelion * SimulationDistanceScale, 0f, 0f),
+                    radius = planet.meanRadius * SimulationScale
                 };
 
                 OrbitData orbitData = new()
                 {
                     eccentricity = planet.eccentricity,
-                    semimajorAxis = planet.semimajorAxis / (int)SimulationDistanceScale,
+                    semimajorAxis = planet.semimajorAxis * SimulationDistanceScale,
                     sideralOrbit = planet.sideralOrbit,
                     primary = _sun
                 };
@@ -100,8 +100,8 @@ public class BigBang : MonoBehaviour
                 var planetDetails = new CelestialData()
                 {
                     bodyName = planet.englishName,
-                    mass = planet.mass.massValue / SimulationDistanceScale,
-                    radius = planet.meanRadius / SimulationScale,
+                    mass = planet.mass.massValue * SimulationDistanceScale,
+                    radius = planet.meanRadius * SimulationScale,
                     position = Vector3.zero
                 };
 

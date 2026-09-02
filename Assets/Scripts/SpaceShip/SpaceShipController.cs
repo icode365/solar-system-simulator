@@ -11,33 +11,24 @@ namespace SpaceShip
         // forwardDirection
         // Movement Data
         public Vector3 Position { get; set; }
-        public Vector3 Velocity { get; set; }
         public Quaternion Rotation { get; set; }
 
         // Configuration Constants
         public float ConstantForwardSpeed { get; } = 5f;
         public float TurnSpeed { get; } = 10f;
-        public float ManeuverSpeed { get; } = 30f;
         public float LeanAmount { get; } = 25f; // For visual tilting
         public float SpeedBootMul { get; } = 2f;
 
         public SpaceShipState()
         {
-            Position = new Vector3(0, 0, -2000f);
+            Position = new Vector3(0, 0, -800f);
             Rotation = Quaternion.identity;
-        }
-        
-        public void SetShipState(Vector3 position, Quaternion rotation)
-        {
-            Position = position;
-            Rotation = rotation;
         }
     }
 
     public class ShipInput
     {
         public Vector2 XYInput;
-        public Vector2 lookInput;
         public bool boostInput;
     }
 
@@ -47,6 +38,7 @@ namespace SpaceShip
         private SpaceShipInput_Actions.PlayerActions _playerActions;
         public SpaceShipState _shipState { get; private set; }
         private ShipInput _pendingInput;
+        public Vector2 lookInput { get; private set; }
 
         private void Awake()
         {
@@ -81,29 +73,24 @@ namespace SpaceShip
 
         public void OnMove(InputAction.CallbackContext context)
         {
-            // Debug.Log(" On Move : " + context.ReadValue<Vector2>());
             _pendingInput.XYInput = context.ReadValue<Vector2>();
         }
 
         public void OnLook(InputAction.CallbackContext context)
         {
-            // Debug.Log(" OnLook : " + context.ReadValue<Vector2>());
-            _pendingInput.lookInput = context.ReadValue<Vector2>();
+            lookInput = context.ReadValue<Vector2>();
         }
 
         public void OnAttack(InputAction.CallbackContext context)
         {
-            // Debug.Log(" OnAttack : " + context.performed);
         }
 
         public void OnInteract(InputAction.CallbackContext context)
         {
-            // Debug.Log(" OnInteract : " + context.performed);
         }
 
         public void OnSprint(InputAction.CallbackContext context)
         {
-            // Debug.Log(" OnSprint : " + context.performed);
             _pendingInput.boostInput = context.performed;
         }
 
@@ -143,7 +130,7 @@ namespace SpaceShip
         private void OnGUI()
         {
             Rect pos = new Rect(10, 10, 500, 500);
-            GUI.Label(pos, $"{_shipState.Position} \n {_shipState.Rotation}" );
+            GUI.Label(pos, $"{_shipState.Position} \n {_shipState.Rotation}");
         }
     }
 }
