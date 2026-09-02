@@ -6,7 +6,7 @@ namespace Planets
     public class OrbitData
     {
         public float eccentricity;
-        public int semimajorAxis;
+        public float semimajorAxis;
         public float sideralOrbit;
         // Composition via Object Association instead of Inheritence
         public CelestialBody primary;

@@ -20,7 +20,7 @@ namespace Planets.Util
         public float meanRadius;
         public float perihelion;
         public float eccentricity;
-        public int semimajorAxis;
+        public float semimajorAxis;
         public float sideralOrbit;
     }
 
