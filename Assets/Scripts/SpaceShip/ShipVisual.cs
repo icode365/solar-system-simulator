@@ -17,12 +17,12 @@ namespace SpaceShip
         private void UpdateVisuals()
         {
             var state = controller._shipState;
-            
+
             transform.position = Vector3.SmoothDamp(
                 transform.position, state.Position, ref _velocity, _dampingValue);
-            
-            transform.rotation = Quaternion.Slerp(
-                transform.rotation, state.Rotation, _dampingValue);
+            var shipRotation = Quaternion.Slerp(
+                transform.rotation, state.Rotation * Quaternion.Euler(0f, 0f, state.CurrentVisualRoll), _dampingValue);
+            transform.rotation = shipRotation;
         }
     }
 }

@@ -5,6 +5,7 @@ namespace SpaceShip
 {
     public class SpaceShipState
     {
+
         // spaceShip State for 
         // Position
         // speed
@@ -17,7 +18,8 @@ namespace SpaceShip
         public float ConstantForwardSpeed { get; } = 5f;
         public float TurnSpeed { get; } = 10f;
         public float LeanAmount { get; } = 25f; // For visual tilting
-        public float SpeedBootMul { get; } = 2f;
+        public float SpeedBootValue { get; } = 2f;
+        public float CurrentVisualRoll;
 
         public SpaceShipState()
         {
@@ -108,23 +110,21 @@ namespace SpaceShip
 
         private void UpdateShipState(ShipInput input)
         {
-            var speedBoostMultiplier = input.boostInput ? _shipState.SpeedBootMul : 1;
-            var x =
-                input.XYInput.x * _shipState.TurnSpeed * Time.deltaTime;
-            var y =
-                input.XYInput.y * _shipState.TurnSpeed * Time.deltaTime;
+            var speedBoostMultiplier = input.boostInput ? _shipState.SpeedBootValue : 1;
+            var x = input.XYInput.x * _shipState.TurnSpeed * Time.deltaTime;
+            var y = input.XYInput.y * _shipState.TurnSpeed * Time.deltaTime;
 
+            // Only yaw/pitch accumulate into the real flight rotation
+            _shipState.Rotation *= Quaternion.Euler(y, x, 0);
 
-            // Visual Juice: Add a roll tilt when turning left or right
-            float rollLean = -x * _shipState.LeanAmount;
-            Quaternion visualLean = Quaternion.Euler(0, 0, rollLean);
-
-            _shipState.Rotation *= Quaternion.Euler(y, x, 0) * visualLean;
             var forward = _shipState.Rotation * Vector3.forward;
-            Vector3 velocity =
-                forward * (_shipState.ConstantForwardSpeed * speedBoostMultiplier);
-
+            Vector3 velocity = forward * (_shipState.ConstantForwardSpeed * speedBoostMultiplier);
             _shipState.Position += velocity * Time.deltaTime;
+
+            // Visual-only roll lean, recomputed every frame (not accumulated)
+            float targetRollLean = -input.XYInput.x * _shipState.LeanAmount;
+            _shipState.CurrentVisualRoll = Mathf.Lerp(
+                _shipState.CurrentVisualRoll, targetRollLean, 7 * Time.deltaTime);
         }
 
         private void OnGUI()
