@@ -5,12 +5,6 @@ namespace SpaceShip
 {
     public class SpaceShipState
     {
-
-        // spaceShip State for 
-        // Position
-        // speed
-        // forwardDirection
-        // Movement Data
         public Vector3 Position { get; set; }
         public Quaternion Rotation { get; set; }
 

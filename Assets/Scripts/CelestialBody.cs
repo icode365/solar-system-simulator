@@ -1,5 +1,7 @@
+using System;
 using UnityEngine;
 
+[Serializable]
 public class CelestialData
 {
     public string bodyName;
@@ -8,6 +10,7 @@ public class CelestialData
     public Vector3 position;
 }
 
+[Serializable]
 public class CelestialBody
 {
     public CelestialData Data { get; private set; }

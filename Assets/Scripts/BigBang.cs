@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -25,9 +26,10 @@ public class BigBang : MonoBehaviour
     private const string planetTexturesPath = "Planets/Textures";
     private HashSet<Texture2D> planetTextures;
 
-    // ✅ 1. Add Sun ID 
+    [SerializeField] private Transform ship;
     private Sun _sun;
     private MaterialBuilder _materialBuilder;
+    private PlanetLocatorService _nearestPlanetSolver = new();
 
     private void Start()
     {
@@ -35,10 +37,11 @@ public class BigBang : MonoBehaviour
         _materialBuilder = new();
         planetTextures =
             _materialBuilder.GetTextures(planetTexturesPath).ToHashSet();
-        
+
         CreateSun(solarSystemData);
         CreateSolarSystemFrom(solarSystemData);
         CreateTime();
+        _nearestPlanetSolver.SetPlanetList(activePlanets, ship);
     }
 
     private void CreateTime()
@@ -46,6 +49,25 @@ public class BigBang : MonoBehaviour
         var solarSystemManager = new GameObject();
         var time = solarSystemManager.AddComponent<SolarSystemManager>();
         time.FixedFrameUpdated += UpdatePlanetPhysics; //TODO All planets update visuals
+        time.FixedFrameUpdated += CalculateNearestPlanet;
+    }
+
+    private Orbiter lastNearestPlanet;
+    public float distance;
+
+    private void CalculateNearestPlanet()
+    {
+        var nearestPlanet = _nearestPlanetSolver.GetNearestPlanet();
+        distance = _nearestPlanetSolver.GetDistanceFromNearestPlanet();
+
+        if (lastNearestPlanet != nearestPlanet)
+        {
+            lastNearestPlanet = nearestPlanet;
+            Debug.Log("Nearest Planer Updated : " + nearestPlanet.Data.bodyName + " " +
+                      _nearestPlanetSolver.GetDistanceFromNearestPlanet());
+        }
+
+        // Debug.Log(_nearestPlanetSolver.GetDistanceFromNearestPlanet());
     }
 
     private void UpdatePlanetPhysics() => activePlanets.ForEach(v => v.PhysicsUpdate());
@@ -114,40 +136,46 @@ public class BigBang : MonoBehaviour
             }
         }
     }
-    
+
     // Material
     private MaterialData GetTexFor(string planetName)
     {
         MaterialData matData = new();
         List<Texture2D> planetRelatedTex = new();
-        
+
         foreach (var planetTex in planetTextures)
         {
             if (planetTex.name.Contains(planetName))
             {
-                planetRelatedTex.Add( planetTex);
-                Debug.Log("Found " + planetName + " texture");
+                planetRelatedTex.Add(planetTex);
             }
         }
-        
-        Texture2D baseTex = planetTextures.FirstOrDefault(t => 
-            t != null && 
+
+        Texture2D baseTex = planetTextures.FirstOrDefault(t =>
+            t != null &&
             t.name.Contains(planetName, System.StringComparison.OrdinalIgnoreCase));
-        
-        Texture2D normalTex = planetTextures.FirstOrDefault(t => 
-            t != null && 
-            t.name.Contains(planetName, System.StringComparison.OrdinalIgnoreCase) && 
+
+        Texture2D normalTex = planetTextures.FirstOrDefault(t =>
+            t != null &&
+            t.name.Contains(planetName, System.StringComparison.OrdinalIgnoreCase) &&
             t.name.Contains("normal", System.StringComparison.OrdinalIgnoreCase));
 
-        Texture2D specularTex = planetTextures.FirstOrDefault(t => 
-            t != null && 
-            t.name.Contains(planetName, System.StringComparison.OrdinalIgnoreCase) && 
+        Texture2D specularTex = planetTextures.FirstOrDefault(t =>
+            t != null &&
+            t.name.Contains(planetName, System.StringComparison.OrdinalIgnoreCase) &&
             t.name.Contains("specular", System.StringComparison.OrdinalIgnoreCase));
 
         matData.baseTex = baseTex;
         matData.normalTex = normalTex;
         matData.specularTex = specularTex;
-        
+
         return matData;
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (!ship || _nearestPlanetSolver.GetNearestPlanet() != null)
+        Gizmos.color = Color.deepPink;
+        Gizmos.DrawLine(ship.position, _nearestPlanetSolver.GetNearestPlanet().GetPosition());
     }
 }

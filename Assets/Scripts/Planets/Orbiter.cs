@@ -1,8 +1,11 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Planets
 {
+    
+    [Serializable]
     public class OrbitData
     {
         public float eccentricity;
@@ -13,9 +16,9 @@ namespace Planets
         public double perihelion;
     }
 
+    [Serializable]
     public class Orbiter : CelestialBody
     {
-        protected const float GravitationalConstant = 1f;
         private Vector3 velocity;
 
         private OrbitData _orbitData;

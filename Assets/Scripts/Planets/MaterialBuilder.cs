@@ -23,7 +23,7 @@ public class MaterialBuilder
     {
         // Debug.Log(BaseMap + " : " + data.baseTex.name);
         Material material = new(Shader.Find("HDRP/Lit"));
-        Debug.Log(string.Join(',', material.GetPropertyNames(MaterialPropertyType.Float)));
+        // Debug.Log(string.Join(',', material.GetPropertyNames(MaterialPropertyType.Float)));
         material.mainTexture = data.baseTex;
 
         if (data.normalTex)
