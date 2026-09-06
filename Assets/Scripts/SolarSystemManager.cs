@@ -5,20 +5,25 @@ public class SolarSystemManager : MonoBehaviour
 {
     [Range(0.1f, 1f)] public float SimulationTime = 0.25f;
     public event Action FixedFrameUpdated;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public float _skipTime = 1f;
+    private float _timeElapsed;
 
-    public void FixedUpdate()
+    private bool _skipFrame;
+    
+    public void Update()
     {
-        FixedFrameUpdated?.Invoke();
+        if (_timeElapsed < _skipTime)
+        {
+            _timeElapsed += Time.deltaTime;
+            return;
+        }
+
+        if (_timeElapsed >= _skipTime)
+        {
+            _timeElapsed = 0f;
+            
+            FixedFrameUpdated?.Invoke();
+        }
     }
 }

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using Planets;
 using Planets.Util;
+using SpaceShip;
 using UnityEngine;
 
 /// <summary>
@@ -32,6 +33,7 @@ public class BigBang : MonoBehaviour
     private PlanetLocatorService _nearestPlanetSolver = new();
 
     public TargetDirectionResolver resolver;
+    public CinematicCutsceneManager cutsceneManager;
 
     private void Start()
     {
@@ -69,6 +71,17 @@ public class BigBang : MonoBehaviour
                       _nearestPlanetSolver.GetDistanceFromNearestPlanet());
             lastNearestPlanet = nearestPlanet;
             resolver.SetTarget(nearestPlanet);
+        }
+
+        if (distance < 20f)
+        {
+            Debug.Log("Trigger Distance Reached.");
+            cutsceneManager.Init(ship.GetComponentInChildren<CameraController>(),
+                ship.GetComponent<SpaceShipController>(),
+                nearestPlanet);
+            Debug.Log("Cutscene initialized");
+            cutsceneManager.StartCutScene();
+            Debug.Log("Cutscene started");
         }
     }
 

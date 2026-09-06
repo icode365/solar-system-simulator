@@ -17,7 +17,7 @@ namespace SpaceShip
 
         public SpaceShipState()
         {
-            Position = new Vector3(0, 0, -800f);
+            Position = new Vector3(0, 0, -200f);
             Rotation = Quaternion.identity;
         }
     }

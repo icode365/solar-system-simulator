@@ -13,8 +13,12 @@ namespace SpaceShip
 
         private void UpdateCamera(SpaceShipState shipState, Vector2 orbitPosition)
         {
-            // transform.rotation = Quaternion.LookRotation(-shipState.Position, transform.up);
-            // transform.position *= orbitPosition.normalized;
+        }
+
+        public void SetCameraPosRot(Vector3 position, Quaternion rotation)
+        {
+            transform.SetLocalPositionAndRotation(
+                position, rotation);
         }
     }
 }
