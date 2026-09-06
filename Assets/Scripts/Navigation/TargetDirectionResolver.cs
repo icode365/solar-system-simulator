@@ -1,37 +1,86 @@
-using System;
+using Planets;
 using SpaceShip;
 using UnityEngine;
 
 public class TargetDirectionResolver : MonoBehaviour
 {
     [SerializeField] private SpaceShipController shipController;
-    [SerializeField] private Transform targetTransform;
-    [SerializeField] private RectTransform targetMarker;
-    [SerializeField] private RectTransform compassBarRect;
+    [SerializeField] private Orbiter targetTransform;
+    [SerializeField] private RectTransform horizontalTargetMarker;
+    [SerializeField] private RectTransform horizontalCompassBarRect;
+    
+    [SerializeField] private RectTransform verticalTargetMarker;
+    [SerializeField] private RectTransform verticalCompassBarRect;
 
+    [SerializeField] private RectTransform onScreenMarker;
+    
+    [SerializeField] private float horizontalFOV = 30f; // Field of view for horizontal tape
+    [SerializeField] private float verticalFOV = 30f;   // Field of view for vertical tape
+
+    private Vector3 targetDir;
+    private Vector3 targetScreenPoint;
+    private Camera playerCam;
+
+    public void SetTarget(Orbiter target) => targetTransform = target;
+
+    public void SetCamera(Camera cam) => playerCam = cam;
+    
     private void LateUpdate()
     {
-        if (!targetTransform) return;
+        if (targetTransform == null || playerCam == null) return;
 
-        Vector3 playerFwd = Vector3.ProjectOnPlane(
-            shipController.transform.forward, Vector3.up).normalized;
-        Vector3 targetDir = Vector3.ProjectOnPlane(
-            targetTransform.position - shipController.transform.position, Vector3.up).normalized;
+        // Calculate direction to target
+        targetDir = (targetTransform.GetPosition() - shipController.transform.position).normalized;
 
-        var relativeAngle = Vector3.SignedAngle(playerFwd, targetDir, Vector3.up);
+        targetScreenPoint = playerCam.WorldToScreenPoint(targetTransform.GetPosition());
+        var lerpedPos = LerpPosition(onScreenMarker.position, targetScreenPoint);
+        onScreenMarker.position = lerpedPos;
 
-        if (Mathf.Abs(relativeAngle) > 30f)
+        // Update horizontal marker
+        UpdateMarker(horizontalTargetMarker, horizontalCompassBarRect, targetScreenPoint.x, targetScreenPoint, true);
+        
+        // Update vertical marker
+        UpdateMarker(verticalTargetMarker, verticalCompassBarRect, targetScreenPoint.y, targetScreenPoint, false);
+    }
+
+    private Vector3 _currentVelocity;
+    private Vector3 LerpPosition(Vector3 from, Vector3 to)
+    {
+        return Vector3.SmoothDamp(from, to, ref _currentVelocity, 0.2f);
+    }
+
+    private void UpdateMarker(RectTransform marker, RectTransform compassRect, float angle, Vector2 markerPos, bool isHorizontal)
+    {
+        if (marker == null || compassRect == null) return;
+
+        // Check if target is within field of view
+        if (Vector3.Dot(playerCam.transform.forward, targetTransform.GetPosition()) > 0.5)
         {
-            targetMarker.gameObject.SetActive(false);
+            marker.gameObject.SetActive(false);
+            onScreenMarker.gameObject.SetActive(true);
+            // onScreenMarker.position = markerPos;
         }
         else
         {
-            targetMarker.gameObject.SetActive(true);
+            marker.gameObject.SetActive(true);
+            // onScreenMarker.gameObject.SetActive(false);
+            
+            // Calculate position on the tape
+            if (isHorizontal)
+            {
+                float xPos = angle;// * compassRect.rect.width;
+                marker.position = new Vector2(xPos, marker.position.y);
+            }
+            else
+            {
+                float yPos = angle;// * compassRect.rect.height;
+                marker.position = new Vector2(marker.position.x, yPos);
+            }
         }
-
-        var normalizedX = relativeAngle / 60f;
-        var xPos = normalizedX * compassBarRect.rect.width;
-
-        targetMarker.anchoredPosition = new Vector2(targetMarker.rect.x, xPos);
+    }
+    
+    public Vector3 GetTargetDirection()
+    {
+        return targetDir;
     }
 }

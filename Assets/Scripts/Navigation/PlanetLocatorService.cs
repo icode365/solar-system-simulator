@@ -4,22 +4,14 @@ using UnityEngine;
 
 public class PlanetLocatorService
 {
-    // Loop until true or paused
-    // Get positions of all planets
-    // get relative position to the space-ship
-    //
-
     private Transform _ship;
     private List<Orbiter> _activePlanets;
     private Orbiter nearestPlanet;
-    private float shortestDistance = Mathf.Infinity;
 
     public void SetPlanetList(List<Orbiter> activePlanets, Transform ship)
     {
         _activePlanets = activePlanets;
         _ship = ship;
-        var direction = _activePlanets[0].GetPosition() - ship.position;
-        shortestDistance = direction.sqrMagnitude;
     }
 
     private float interDistance;
@@ -28,8 +20,8 @@ public class PlanetLocatorService
     {
         float shortestSqrDistance = float.MaxValue;
 
-        if (_activePlanets is { Count: 0 }) return null;
-        
+            if (_activePlanets is { Count: 0 }) return null;
+
         foreach (var planet in _activePlanets)
         {
             if (planet == null) continue; // Safety check
@@ -37,7 +29,6 @@ public class PlanetLocatorService
             // 2. Get the squared distance
             float interDistance = GetSqrDistance(planet.GetPosition(), _ship.position);
 
-            // 3. Compare directly since both are already squared values
             if (interDistance < shortestSqrDistance)
             {
                 shortestSqrDistance = interDistance;
@@ -47,6 +38,7 @@ public class PlanetLocatorService
 
         return nearestPlanet;
     }
+    
 
     public float GetDistanceFromNearestPlanet()
     {

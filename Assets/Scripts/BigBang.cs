@@ -31,6 +31,8 @@ public class BigBang : MonoBehaviour
     private MaterialBuilder _materialBuilder;
     private PlanetLocatorService _nearestPlanetSolver = new();
 
+    public TargetDirectionResolver resolver;
+
     private void Start()
     {
         var solarSystemData = GetSolarSystemData();
@@ -42,6 +44,7 @@ public class BigBang : MonoBehaviour
         CreateSolarSystemFrom(solarSystemData);
         CreateTime();
         _nearestPlanetSolver.SetPlanetList(activePlanets, ship);
+        resolver.SetCamera(ship.GetComponentInChildren<Camera>());
     }
 
     private void CreateTime()
@@ -49,25 +52,24 @@ public class BigBang : MonoBehaviour
         var solarSystemManager = new GameObject();
         var time = solarSystemManager.AddComponent<SolarSystemManager>();
         time.FixedFrameUpdated += UpdatePlanetPhysics; //TODO All planets update visuals
-        time.FixedFrameUpdated += CalculateNearestPlanet;
+        time.FixedFrameUpdated += FindNearestPlanet;
     }
 
     private Orbiter lastNearestPlanet;
     public float distance;
 
-    private void CalculateNearestPlanet()
+    private void FindNearestPlanet()
     {
         var nearestPlanet = _nearestPlanetSolver.GetNearestPlanet();
         distance = _nearestPlanetSolver.GetDistanceFromNearestPlanet();
 
         if (lastNearestPlanet != nearestPlanet)
         {
-            lastNearestPlanet = nearestPlanet;
             Debug.Log("Nearest Planer Updated : " + nearestPlanet.Data.bodyName + " " +
                       _nearestPlanetSolver.GetDistanceFromNearestPlanet());
+            lastNearestPlanet = nearestPlanet;
+            resolver.SetTarget(nearestPlanet);
         }
-
-        // Debug.Log(_nearestPlanetSolver.GetDistanceFromNearestPlanet());
     }
 
     private void UpdatePlanetPhysics() => activePlanets.ForEach(v => v.PhysicsUpdate());
@@ -174,8 +176,16 @@ public class BigBang : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        if (!ship || _nearestPlanetSolver.GetNearestPlanet() != null)
-        Gizmos.color = Color.deepPink;
-        Gizmos.DrawLine(ship.position, _nearestPlanetSolver.GetNearestPlanet().GetPosition());
+        if (ship && lastNearestPlanet != null)
+        {
+            Gizmos.color = Color.deepPink;
+            Gizmos.DrawLine(ship.position, lastNearestPlanet.GetPosition());
+        }
+
+        if (resolver)
+        {
+            Gizmos.color = Color.deepSkyBlue;
+            Gizmos.DrawLine(ship.position, ship.position + resolver.GetTargetDirection());
+        }
     }
 }
