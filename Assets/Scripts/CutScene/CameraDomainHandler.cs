@@ -4,12 +4,13 @@ using Scripts.CutScene;
 using SpaceShip;
 using UnityEngine;
 
-public class CameraDomainHandler : MonoBehaviour, ISequenceDomainHandler
+public class CameraDomainHandler : MonoBehaviour
 {
     [SerializeField] private Camera _camera;
     [SerializeField] private CameraController _cameraController;
     [SerializeField] private float cinematicFOV = 75f;
 
+    private float initialFOV = 60f;
     private Vector3 initialCameraOffset;
     private Vector3 initialCameraRotation;
 
@@ -17,12 +18,13 @@ public class CameraDomainHandler : MonoBehaviour, ISequenceDomainHandler
     {
         initialCameraOffset = _camera.transform.position;
         initialCameraRotation = _camera.transform.eulerAngles;
-        FindAnyObjectByType<CutsceneSequencer>().CutSceneStartedEvent += StartSequence;
+        initialFOV = _camera.fieldOfView;
+        FindAnyObjectByType<CutsceneSequencer>().CameraCutSceneStartedEvent += StartSequence;
     }
 
     public void StartSequence(
         CutSceneStep stepConfig,
-        CutSceneContext ctx)
+        CameraCutSceneContext ctx)
     {
         _camera = GetComponentInChildren<Camera>();
         GetComponent<CameraController>().enabled = false;
@@ -52,7 +54,7 @@ public class CameraDomainHandler : MonoBehaviour, ISequenceDomainHandler
                 5f));
 
         cinematicSequence.AppendInterval(5f);
-        
+
         // Sequence.spawn rotate correctly to include planet and spaceship
         cinematicSequence.onComplete += WrapUp;
     }
@@ -64,7 +66,7 @@ public class CameraDomainHandler : MonoBehaviour, ISequenceDomainHandler
     public void WrapUp()
     {
         _camera.DOFieldOfView(
-            cinematicFOV, 1f);
+            initialFOV, 1f);
         _camera.transform.DOLocalMove(
             Vector3.zero, 1f);
         _camera.transform.DOLocalRotate(

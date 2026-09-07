@@ -77,7 +77,11 @@ public class BigBang : MonoBehaviour
         {
             cutsceneStarted = true;
             Debug.Log("Trigger Distance Reached.");
-            CutSceneContext ctx = new(ship.position, nearestPlanet.GetPosition());
+
+            CameraCutSceneContext cameraCtx = new(ship.position, nearestPlanet.GetPosition());
+            UIContext uiCtx = new(nearestPlanet.Data.bodyName);
+            CutSceneContext ctx = new(uiCtx, cameraCtx);
+
             cutsceneSequencer.Init(cutSceneConfig);
             Debug.Log("Cutscene initialized");
             cutsceneSequencer.StartCutScene(ctx);

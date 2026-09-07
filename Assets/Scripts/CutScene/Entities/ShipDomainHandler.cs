@@ -1,33 +1,29 @@
-using System;
-using DG.Tweening;
 using Scripts.CutScene;
 using SpaceShip;
 using UnityEngine;
 
-public class ShipDomainHandler : MonoBehaviour, ISequenceDomainHandler
+public class ShipDomainHandler : MonoBehaviour
 {
     private SpaceShipController _controller;
-    
+
     private void Start()
     {
-        _controller = GetComponent<SpaceShipController>();    
+        _controller = GetComponent<SpaceShipController>();
+        FindAnyObjectByType<CutsceneSequencer>().CameraCutSceneStartedEvent +=
+            StartSequence;
     }
 
-    public void StartSequence(CutSceneStep step, CutSceneContext ctx)
+    public void StartSequence(CutSceneStep step, CameraCutSceneContext ctx)
     {
         _controller.enabled = false;
-
-        DOTween.Sequence();
-        
     }
 
     public void SequenceUpdate()
     {
-        throw new System.NotImplementedException();
     }
 
     public void WrapUp()
     {
-        throw new System.NotImplementedException();
+        _controller.enabled = true;
     }
 }

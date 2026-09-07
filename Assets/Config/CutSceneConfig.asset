@@ -17,3 +17,7 @@ MonoBehaviour:
     totalTime: 5
     rightOffset: 20
     backOffset: 10
+  - type: 1
+    totalTime: 5
+    rightOffset: 20
+    backOffset: 10

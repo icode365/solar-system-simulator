@@ -20,10 +20,22 @@ namespace Scripts.CutScene
 
     public struct CutSceneContext
     {
+        public UIContext uiContext;
+        public CameraCutSceneContext cameraContext;
+        
+        public CutSceneContext(UIContext ui, CameraCutSceneContext camera)
+        {
+            uiContext = ui;
+            cameraContext = camera;
+        }
+    }
+    
+    public struct CameraCutSceneContext
+    {
         private Vector3 shipPosition;
         private Vector3 targetPosition;
 
-        public CutSceneContext(Vector3 ship, Vector3 target)
+        public CameraCutSceneContext(Vector3 ship, Vector3 target)
         {
             shipPosition = ship;
             targetPosition = target;
@@ -53,6 +65,16 @@ namespace Scripts.CutScene
             return GetMidPoint() +
                    (camTransform.forward * -backOffset) +
                    (camTransform.right * rightOffset);
+        }
+    }
+
+    public struct UIContext
+    {
+        public string text;
+        
+        public UIContext(string text)
+        {
+            this.text = text;
         }
     }
 }
