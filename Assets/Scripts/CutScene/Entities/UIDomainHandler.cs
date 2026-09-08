@@ -25,22 +25,23 @@ public class UIDomainHandler : MonoBehaviour
     }
 
 
-    private void StartSequence(CutSceneStep step, UIContext ctx)
+    private void StartSequence(
+        CutSceneStep step, UIContext ctx,
+        Sequence sequence)
     {
         Debug.Log("Reached UI");
-        var cinematicSequence = DOTween.Sequence();
         // cinematicSequence.Append(
         //     verticalLine.DOValue(1, .5f));
         // cinematicSequence.Append(
         //     horizontalLine.DOValue(1, .5f));
 
         label.text = ctx.text;
-        cinematicSequence.AppendInterval(2f);
-        cinematicSequence.Append(
+        sequence.AppendInterval(2f);
+        sequence.Append(
             labelGroup.DOFade(1, 1f));
-        cinematicSequence.AppendInterval(3f);
+        sequence.AppendInterval(3f);
 
-        cinematicSequence.onComplete += WrapUp;
+        sequence.onComplete += WrapUp;
     }
 
     public void SequenceUpdate()
@@ -50,6 +51,6 @@ public class UIDomainHandler : MonoBehaviour
     public void WrapUp()
     {
         label.text = "";
-        labelGroup.DOFade(1, 1f);
+        labelGroup.DOFade(0, 1f);
     }
 }

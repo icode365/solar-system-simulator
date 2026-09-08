@@ -4,13 +4,14 @@ using UnityEngine;
 
 namespace Planets
 {
-    
     [Serializable]
     public class OrbitData
     {
         public float eccentricity;
         public float semimajorAxis;
+
         public float sideralOrbit;
+
         // Composition via Object Association instead of Inheritence
         public CelestialBody primary;
         public double perihelion;
@@ -22,11 +23,12 @@ namespace Planets
         private Vector3 velocity;
 
         private OrbitData _orbitData;
-        
+
         public Orbiter(CelestialData data, OrbitData orbiterData, Material material)
             : base(data, material)
         {
             _orbitData = orbiterData;
+            base.AddProximityTrigger(this);
         }
 
 
@@ -46,12 +48,13 @@ namespace Planets
             // 3. Calculate 2D position in the orbital plane
             // The Sun sits at one of the focal points, which is shifted by (a * e)
             float x = _orbitData.semimajorAxis * (Mathf.Cos(eccentricAnomaly) - _orbitData.eccentricity);
-            float z = _orbitData.semimajorAxis * Mathf.Sqrt(1f - _orbitData.eccentricity * _orbitData.eccentricity) * Mathf.Sin(eccentricAnomaly);
+            float z = _orbitData.semimajorAxis * Mathf.Sqrt(1f - _orbitData.eccentricity * _orbitData.eccentricity) *
+                      Mathf.Sin(eccentricAnomaly);
 
-                // TODO : Add Function to set the position
-            visualTransform.transform.position = _orbitData.primary.GetPosition() + new Vector3(x, 0f, z);
+            // TODO : Add Function to set the position
+            Data.position = _orbitData.primary.GetPosition() + new Vector3(x, 0f, z);
 
-            Data.position = visualTransform.transform.position;
+            visualTransform.transform.position = Data.position;
         }
 
         // Iterative solver for Kepler's Equation: M = E - e*sin(E)

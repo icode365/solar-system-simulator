@@ -1,4 +1,5 @@
 using System;
+using Planets;
 using UnityEngine;
 
 [Serializable]
@@ -25,6 +26,12 @@ public class CelestialBody
         ConfigureBodyVisual();
     }
 
+    protected void AddProximityTrigger(Orbiter orbiter)
+    {
+        var trigger = visualTransform.gameObject.AddComponent<ProximityTrigger>();
+        trigger.SetOrbiter(orbiter);
+    }
+
     private void ConfigureBodyVisual()
     {
         var planetObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
@@ -35,5 +42,14 @@ public class CelestialBody
         visualTransform.AssignMaterial(_material);
     }
 
-    public Vector3 GetPosition() => Data.position;
+    public Vector3 GetPosition()
+    {
+        if (Data == null)
+        {
+            // Debug.LogError("Celestial Body Data is null");
+            return Vector3.zero;
+        }
+
+        return Data.position;
+    }
 }

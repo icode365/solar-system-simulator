@@ -1,3 +1,4 @@
+using DG.Tweening;
 using Scripts.CutScene;
 using SpaceShip;
 using UnityEngine;
@@ -13,9 +14,12 @@ public class ShipDomainHandler : MonoBehaviour
             StartSequence;
     }
 
-    public void StartSequence(CutSceneStep step, CameraCutSceneContext ctx)
+    public void StartSequence(
+        CutSceneStep step, CameraCutSceneContext ctx,
+        Sequence sequence)
     {
         _controller.enabled = false;
+        sequence.onComplete += WrapUp;
     }
 
     public void SequenceUpdate()

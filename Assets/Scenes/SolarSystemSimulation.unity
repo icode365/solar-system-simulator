@@ -203,37 +203,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 5142311461918263185, guid: f4266dcbe3ab6fc4bbcfc62f6bf6922e, type: 3}
   m_PrefabInstance: {fileID: 1848094151102681629}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &228590773 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 446149580812714885, guid: f4266dcbe3ab6fc4bbcfc62f6bf6922e, type: 3}
-  m_PrefabInstance: {fileID: 1848094151102681629}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &228590775 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7506135439467480258, guid: f4266dcbe3ab6fc4bbcfc62f6bf6922e, type: 3}
-  m_PrefabInstance: {fileID: 1848094151102681629}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 228590773}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8c044e086b7540288860f343b3723311, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SpaceShip.CameraController
---- !u!114 &228590776
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 228590773}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ae7d286c741eca2449cab51876c64ccb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CameraDomainHandler
-  _camera: {fileID: 1706394244}
-  _cameraController: {fileID: 228590775}
-  cinematicFOV: 75
 --- !u!1 &240869280
 GameObject:
   m_ObjectHideFlags: 0
@@ -1059,11 +1028,6 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
---- !u!20 &1706394244 stripped
-Camera:
-  m_CorrespondingSourceObject: {fileID: 3954519114210069652, guid: f4266dcbe3ab6fc4bbcfc62f6bf6922e, type: 3}
-  m_PrefabInstance: {fileID: 1848094151102681629}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1790639185
 GameObject:
   m_ObjectHideFlags: 0
@@ -1093,6 +1057,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a0468141c263724aa10a2e7be8ca2c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CinematicCutsceneManager
+  isRunning: 0
 --- !u!4 &1790639187
 Transform:
   m_ObjectHideFlags: 0
@@ -1145,7 +1110,6 @@ MonoBehaviour:
   cutsceneSequencer: {fileID: 1790639186}
   cutSceneConfig: {fileID: 11400000, guid: c65e27fe284c4534f9873901fa896383, type: 2}
   distance: 0
-  cutsceneStarted: 0
 --- !u!4 &1844473338
 Transform:
   m_ObjectHideFlags: 0
@@ -1558,80 +1522,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: SpaceShip
       objectReference: {fileID: 0}
-    - target: {fileID: 7757235746787894389, guid: f4266dcbe3ab6fc4bbcfc62f6bf6922e, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7757235746787894389, guid: f4266dcbe3ab6fc4bbcfc62f6bf6922e, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7757235746787894389, guid: f4266dcbe3ab6fc4bbcfc62f6bf6922e, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7757235746787894389, guid: f4266dcbe3ab6fc4bbcfc62f6bf6922e, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7757235746787894389, guid: f4266dcbe3ab6fc4bbcfc62f6bf6922e, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7983521880681355752, guid: f4266dcbe3ab6fc4bbcfc62f6bf6922e, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.75
-      objectReference: {fileID: 0}
-    - target: {fileID: 7983521880681355752, guid: f4266dcbe3ab6fc4bbcfc62f6bf6922e, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.75
-      objectReference: {fileID: 0}
-    - target: {fileID: 7983521880681355752, guid: f4266dcbe3ab6fc4bbcfc62f6bf6922e, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.75
-      objectReference: {fileID: 0}
-    - target: {fileID: 7983521880681355752, guid: f4266dcbe3ab6fc4bbcfc62f6bf6922e, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -2
-      objectReference: {fileID: 0}
-    - target: {fileID: 7983521880681355752, guid: f4266dcbe3ab6fc4bbcfc62f6bf6922e, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 6.92
-      objectReference: {fileID: 0}
-    - target: {fileID: 7983521880681355752, guid: f4266dcbe3ab6fc4bbcfc62f6bf6922e, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.98428816
-      objectReference: {fileID: 0}
-    - target: {fileID: 7983521880681355752, guid: f4266dcbe3ab6fc4bbcfc62f6bf6922e, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0.17656942
-      objectReference: {fileID: 0}
-    - target: {fileID: 7983521880681355752, guid: f4266dcbe3ab6fc4bbcfc62f6bf6922e, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7983521880681355752, guid: f4266dcbe3ab6fc4bbcfc62f6bf6922e, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7983521880681355752, guid: f4266dcbe3ab6fc4bbcfc62f6bf6922e, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: -20.34
-      objectReference: {fileID: 0}
-    - target: {fileID: 7983521880681355752, guid: f4266dcbe3ab6fc4bbcfc62f6bf6922e, type: 3}
-      propertyPath: m_ConstrainProportionsScale
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 5142311461918263185, guid: f4266dcbe3ab6fc4bbcfc62f6bf6922e, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1848094151102681634}
-    - targetCorrespondingSourceObject: {fileID: 446149580812714885, guid: f4266dcbe3ab6fc4bbcfc62f6bf6922e, type: 3}
+      addedObject: {fileID: 1848094151102681637}
+    - targetCorrespondingSourceObject: {fileID: 5142311461918263185, guid: f4266dcbe3ab6fc4bbcfc62f6bf6922e, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 228590776}
+      addedObject: {fileID: 1848094151102681636}
   m_SourcePrefab: {fileID: 100100000, guid: f4266dcbe3ab6fc4bbcfc62f6bf6922e, type: 3}
 --- !u!114 &1848094151102681630 stripped
 MonoBehaviour:
@@ -1649,18 +1549,54 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4062672141301566690, guid: f4266dcbe3ab6fc4bbcfc62f6bf6922e, type: 3}
   m_PrefabInstance: {fileID: 1848094151102681629}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1848094151102681634
-MonoBehaviour:
+--- !u!54 &1848094151102681636
+Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 122102234}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!65 &1848094151102681637
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 122102234}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 598a7a312d1345545a463b6307052b9f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ShipDomainHandler
+  serializedVersion: 3
+  m_Size: {x: 4.657592, y: 4.5016565, z: 5.1791153}
+  m_Center: {x: -0.18919182, y: -1.7508283, z: 7.1097374}
 --- !u!1001 &3389156377024885372
 PrefabInstance:
   m_ObjectHideFlags: 0

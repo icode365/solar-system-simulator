@@ -24,19 +24,18 @@ public class CameraDomainHandler : MonoBehaviour
 
     public void StartSequence(
         CutSceneStep stepConfig,
-        CameraCutSceneContext ctx)
+        CameraCutSceneContext ctx,
+        Sequence sequence)
     {
         _camera = GetComponentInChildren<Camera>();
         GetComponent<CameraController>().enabled = false;
 
-        // new DoTween.Sequence
-        var cinematicSequence = DOTween.Sequence();
-        cinematicSequence.Join(
+        sequence.Join(
             _camera.DOFieldOfView(
                 cinematicFOV, 2f));
 
         // Sequence.spawn zoom-out
-        cinematicSequence.Join(
+        sequence.Join(
             _camera.transform.DOMove(
                 ctx.GetCamPositionWithOffset(
                     _camera.transform,
@@ -45,7 +44,7 @@ public class CameraDomainHandler : MonoBehaviour
                 5f));
 
         // Sequence.spawn rotate correctly to include planet and spaceship
-        cinematicSequence.Join(
+        sequence.Join(
             _camera.transform.DORotate(
                 ctx.GetLookRotation(
                     _camera.transform,
@@ -53,10 +52,10 @@ public class CameraDomainHandler : MonoBehaviour
                     stepConfig.rightOffset),
                 5f));
 
-        cinematicSequence.AppendInterval(5f);
+        sequence.AppendInterval(5f);
 
         // Sequence.spawn rotate correctly to include planet and spaceship
-        cinematicSequence.onComplete += WrapUp;
+        sequence.onComplete += WrapUp;
     }
 
     public void SequenceUpdate()

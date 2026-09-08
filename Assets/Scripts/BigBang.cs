@@ -46,6 +46,22 @@ public class BigBang : MonoBehaviour
         CreateTime();
         _nearestPlanetSolver.SetPlanetList(activePlanets, ship);
         resolver.SetCamera(ship.GetComponentInChildren<Camera>());
+
+        cutsceneSequencer.Init(cutSceneConfig);
+        ProximityTrigger.OnProximityEnter += OnShipEnteredPlanetProximity;
+    }
+
+    private void OnShipEnteredPlanetProximity(Orbiter orbiter)
+    {
+        Debug.Log("Trigger Distance Reached.");
+
+        CameraCutSceneContext cameraCtx = new(ship.position, orbiter.GetPosition());
+        UIContext uiCtx = new(orbiter.Data.bodyName);
+        CutSceneContext ctx = new(uiCtx, cameraCtx);
+
+        Debug.Log("Cutscene initialized");
+        cutsceneSequencer.StartCutScene(ctx);
+        Debug.Log("Cutscene started");
     }
 
     private void CreateTime()
@@ -58,7 +74,6 @@ public class BigBang : MonoBehaviour
 
     private Orbiter lastNearestPlanet;
     public float distance;
-    public bool cutsceneStarted = false;
 
     private void FindNearestPlanet()
     {
@@ -71,21 +86,6 @@ public class BigBang : MonoBehaviour
                       _nearestPlanetSolver.GetDistanceFromNearestPlanet());
             lastNearestPlanet = nearestPlanet;
             resolver.SetTarget(nearestPlanet);
-        }
-
-        if (distance < 20f && !cutsceneStarted)
-        {
-            cutsceneStarted = true;
-            Debug.Log("Trigger Distance Reached.");
-
-            CameraCutSceneContext cameraCtx = new(ship.position, nearestPlanet.GetPosition());
-            UIContext uiCtx = new(nearestPlanet.Data.bodyName);
-            CutSceneContext ctx = new(uiCtx, cameraCtx);
-
-            cutsceneSequencer.Init(cutSceneConfig);
-            Debug.Log("Cutscene initialized");
-            cutsceneSequencer.StartCutScene(ctx);
-            Debug.Log("Cutscene started");
         }
     }
 
