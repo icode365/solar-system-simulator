@@ -350,6 +350,7 @@ GameObject:
   m_Component:
   - component: {fileID: 353934419}
   - component: {fileID: 353934420}
+  - component: {fileID: 353934421}
   m_Layer: 0
   m_Name: HUD
   m_TagString: Untagged
@@ -385,8 +386,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0432ed0ea45e183409ab092e9b313f0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIDomainHandler
-  horizontalLine: {fileID: 914672128}
-  verticalLine: {fileID: 1260112898}
+--- !u!114 &353934421
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 353934418}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51ed56a9a763fb44db7c022458499089, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HUDController
   labelGroup: {fileID: 1232548611}
   label: {fileID: 240869282}
 --- !u!224 &410633130 stripped
@@ -455,17 +466,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 3383808921270895835, guid: 894574918a7e19c4884b8aec6b7c91be, type: 3}
   m_PrefabInstance: {fileID: 7815291644185029728}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &914672128 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8339282209748044729, guid: b1bec95bbaec929448da60bb61376c0a, type: 3}
-  m_PrefabInstance: {fileID: 3389156377024885372}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Slider
 --- !u!1 &1232548609
 GameObject:
   m_ObjectHideFlags: 0
@@ -515,17 +515,6 @@ CanvasGroup:
   m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
---- !u!114 &1260112898 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2418569026609586477, guid: b1bec95bbaec929448da60bb61376c0a, type: 3}
-  m_PrefabInstance: {fileID: 3389156377024885372}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Slider
 --- !u!1 &1278024467
 GameObject:
   m_ObjectHideFlags: 0
@@ -1057,7 +1046,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a0468141c263724aa10a2e7be8ca2c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CinematicCutsceneManager
-  isRunning: 0
 --- !u!4 &1790639187
 Transform:
   m_ObjectHideFlags: 0
@@ -1108,8 +1096,8 @@ MonoBehaviour:
   ship: {fileID: 1848094151102681632}
   resolver: {fileID: 503811843}
   cutsceneSequencer: {fileID: 1790639186}
-  cutSceneConfig: {fileID: 11400000, guid: c65e27fe284c4534f9873901fa896383, type: 2}
-  distance: 0
+  cinematicTimelineConfig: {fileID: 11400000, guid: c65e27fe284c4534f9873901fa896383, type: 2}
+  hudController: {fileID: 353934421}
 --- !u!4 &1844473338
 Transform:
   m_ObjectHideFlags: 0
@@ -1522,7 +1510,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: SpaceShip
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8262771163439192141, guid: f4266dcbe3ab6fc4bbcfc62f6bf6922e, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:

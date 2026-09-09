@@ -1,35 +1,32 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Scripts.CutScene
 {
-    public enum StepType
+    public class CutSceneContext
     {
-        Camera,
-        UI,
-        Ship
-    }
+        private readonly Dictionary<Type, object> _services = new();
 
-    [System.Serializable]
-    public class CutSceneStep
-    {
-        public StepType type;
-        public float totalTime;
-        public float rightOffset = 10f;
-        public float backOffset = 10f;
-    }
-
-    public struct CutSceneContext
-    {
-        public UIContext uiContext;
-        public CameraCutSceneContext cameraContext;
-        
-        public CutSceneContext(UIContext ui, CameraCutSceneContext camera)
+        // Register a manager/system into the container
+        public void Register<T>(T service) where T : class
         {
-            uiContext = ui;
-            cameraContext = camera;
+            _services[typeof(T)] = service;
+        }
+
+        // Resolve/Retrieve a manager inside an Action
+        public T Resolve<T>() where T : class
+        {
+            if (_services.TryGetValue(typeof(T), out var service))
+            {
+                return service as T;
+            }
+
+            Debug.LogWarning($"[CutsceneContext] Service of type {typeof(T).Name} not found!");
+            return null;
         }
     }
-    
+
     public struct CameraCutSceneContext
     {
         private Vector3 shipPosition;
@@ -71,7 +68,7 @@ namespace Scripts.CutScene
     public struct UIContext
     {
         public string text;
-        
+
         public UIContext(string text)
         {
             this.text = text;
