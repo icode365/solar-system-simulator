@@ -31,7 +31,7 @@ public class BigBang : MonoBehaviour
     private PlanetLocatorService _nearestPlanetSolver = new();
 
     public TargetDirectionResolver resolver;
-    public CutsceneSequencer cutsceneSequencer;
+    public CutsceneDirector cutsceneDirector;
     public CinematicTimelineConfig cinematicTimelineConfig;
     public HUDController hudController;
 
@@ -66,7 +66,7 @@ public class BigBang : MonoBehaviour
         ctx.Register(ship);
 
         Debug.Log("Cutscene initialized");
-        cutsceneSequencer.PlayTimeline(cinematicTimelineConfig, ctx);
+        cutsceneDirector.PlayTimeline(cinematicTimelineConfig, ctx);
         Debug.Log("Cutscene started");
     }
 
