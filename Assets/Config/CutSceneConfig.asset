@@ -13,11 +13,6 @@ MonoBehaviour:
   m_Name: CutSceneConfig
   m_EditorClassIdentifier: Assembly-CSharp::Scripts.CutScene.CutSceneConfig
   steps:
-  - type: 0
-    totalTime: 5
-    rightOffset: 20
-    backOffset: 10
-  - type: 1
-    totalTime: 5
-    rightOffset: 20
-    backOffset: 10
+  - {fileID: 11400000, guid: 72aff79af2ee565408710c2d34bfde15, type: 2}
+  - {fileID: 11400000, guid: 07bcd74458b85cc40b1f11ae92f16512, type: 2}
+  - {fileID: 11400000, guid: 37a8bc606056d9045a441814ad6a51af, type: 2}
