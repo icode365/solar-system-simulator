@@ -15,5 +15,5 @@ MonoBehaviour:
   playSimulatneously: 1
   text: 
   preDelay: 2
-  stayDelay: 5
+  stayDelay: 3
   exitDelay: 2

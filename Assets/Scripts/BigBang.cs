@@ -83,7 +83,8 @@ public class BigBang : MonoBehaviour
     private void FindNearestPlanet()
     {
         var nearestPlanet = _nearestPlanetSolver.GetNearestPlanet();
-        // distance = _nearestPlanetSolver.GetDistanceFromNearestPlanet();
+        var distance = _nearestPlanetSolver.GetDistanceFromNearestPlanet();
+        resolver.SetDistanceToTarget(distance);
 
         if (lastNearestPlanet != nearestPlanet)
         {
