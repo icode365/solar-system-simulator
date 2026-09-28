@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Rendering.HighDefinition;
 
 public class MaterialData
 {
@@ -22,7 +21,7 @@ public class MaterialBuilder
     public Material ApplyMaps(MaterialData data)
     {
         // Debug.Log(BaseMap + " : " + data.baseTex.name);
-        Material material = new(Shader.Find("HDRP/Lit"));
+        Material material = new(Shader.Find("Unlit/Texture"));
         // Debug.Log(string.Join(',', material.GetPropertyNames(MaterialPropertyType.Float)));
         material.mainTexture = data.baseTex;
 

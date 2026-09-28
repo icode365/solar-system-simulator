@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 3963fe4aa404fe749bf9fc5a5cc08e3c, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -459,6 +459,33 @@ MonoBehaviour:
   verticalTargetMarker: {fileID: 1278024468}
   verticalCompassBarRect: {fileID: 1308936083}
   onScreenMarker: {fileID: 1459679625}
+  onScreenMarkerImage: {fileID: 1459679626}
+  onScreenMarkerFade:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  onScreenMarkerMinVisiableThreshold: 20
+  onScreenMarkerMaxVisiableThreshold: 100
   horizontalFOV: 30
   verticalFOV: 30
 --- !u!224 &695947309 stripped
@@ -637,6 +664,7 @@ MonoBehaviour:
   m_ShapeHeight: -1
   m_AspectRatio: -1
   m_Version: 14
+  m_LightLayers: 1
   m_ObsoleteShadowResolutionTier: 1
   m_ObsoleteUseShadowQualitySettings: 0
   m_ObsoleteCustomShadowResolution: 512
@@ -670,17 +698,29 @@ MonoBehaviour:
   diameterOverride: 0.5
   celestialBodyShadingSource: 1
   sunLightOverride: {fileID: 0}
-  sunColor: {r: 1, g: 1, b: 1, a: 1}
+  sunColor:
+    r: 1
+    g: 1
+    b: 1
+    a: 1
   sunIntensity: 130000
   moonPhase: 0.2
   moonPhaseRotation: 0
   earthshine: 1
   flareSize: 2
-  flareTint: {r: 1, g: 1, b: 1, a: 1}
+  flareTint:
+    r: 1
+    g: 1
+    b: 1
+    a: 1
   flareFalloff: 4
   flareMultiplier: 1
   surfaceTexture: {fileID: 0}
-  surfaceTint: {r: 1, g: 1, b: 1, a: 1}
+  surfaceTint:
+    r: 1
+    g: 1
+    b: 1
+    a: 1
   m_Distance: 1.5e+11
   m_UseRayTracedShadows: 0
   m_NumRayTracingSamples: 4
@@ -724,7 +764,11 @@ MonoBehaviour:
     m_UseOverride: 1
     m_Level: 0
   m_RayTracedContactShadow: 0
-  m_ShadowTint: {r: 0, g: 0, b: 0, a: 1}
+  m_ShadowTint:
+    r: 0
+    g: 0
+    b: 0
+    a: 1
   m_PenumbraTint: 0
   m_NormalBias: 0.75
   m_SlopeBias: 0.5
@@ -737,6 +781,7 @@ MonoBehaviour:
   m_BarnDoorLength: 0.05
   m_preserveCachedShadow: 0
   m_OnDemandShadowRenderOnPlacement: 1
+  forceRenderOnPlacement: 0
   m_ShadowCascadeRatios:
   - 0.05
   - 0.2
@@ -752,6 +797,13 @@ MonoBehaviour:
   useOldInspector: 0
   useVolumetric: 1
   featuresFoldout: 1
+  m_Light: {fileID: 1454047903}
+  m_ChildEmissiveMeshViewer: {fileID: 0}
+  m_EmissiveMeshFilter: {fileID: 0}
+  <emissiveMeshRenderer>k__BackingField: {fileID: 0}
+  m_NeedsPrefabInstanceCheck: 0
+  needRefreshPrefabInstanceEmissiveMeshes: 0
+  needRefreshEmissiveMeshesFromTimeLineUpdate: 0
   m_AreaLightEmissiveMeshShadowCastingMode: 0
   m_AreaLightEmissiveMeshMotionVectorGenerationMode: 0
   m_AreaLightEmissiveMeshLayer: -1
@@ -885,7 +937,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0, b: 0.51239395, a: 0.20392157}
+  m_Color: {r: 0, g: 1, b: 0.90397596, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1095,7 +1147,7 @@ MonoBehaviour:
   planetdataJson: {fileID: 4900000, guid: f2540e92cce010544b242edfc172bfef, type: 3}
   ship: {fileID: 1848094151102681632}
   resolver: {fileID: 503811843}
-  cutsceneSequencer: {fileID: 1790639186}
+  cutsceneDirector: {fileID: 1790639186}
   cinematicTimelineConfig: {fileID: 11400000, guid: c65e27fe284c4534f9873901fa896383, type: 2}
   hudController: {fileID: 353934421}
 --- !u!4 &1844473338
