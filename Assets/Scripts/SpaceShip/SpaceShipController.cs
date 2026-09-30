@@ -35,12 +35,44 @@ namespace SpaceShip
         public SpaceShipState _shipState { get; private set; }
         private ShipInput _pendingInput;
         public Vector2 lookInput { get; private set; }
+        bool shipEnabled = false;
 
-        private void Awake()
+        public void StartShip()
         {
             Init();
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
+            EnableShip();
+        }
+
+        public void StopShip()
+        {
+            DisableShip();
+        }
+
+        public void EnableShip()
+        {
+            shipEnabled = true;
+            UpdateShipInput();
+        }
+
+        public void DisableShip()
+        {
+            shipEnabled = false;
+            UpdateShipInput();
+        }
+
+        private void UpdateShipInput()
+        {
+            if (shipEnabled)
+            {
+                spaceShipInput.Enable();
+            }
+            else
+            {
+                spaceShipInput.Disable();
+            }
+            
+            Cursor.lockState = shipEnabled? CursorLockMode.Locked : CursorLockMode.None;
+            Cursor.visible = shipEnabled;
         }
 
         private void Init()
@@ -52,19 +84,20 @@ namespace SpaceShip
             _playerActions.AddCallbacks(this);
         }
 
-        private void OnEnable()
-        {
-            spaceShipInput.Enable();
-        }
-
-        private void OnDisable()
-        {
-            spaceShipInput.Disable();
-        }
+        // private void OnEnable()
+        // {
+        //     spaceShipInput.Enable();
+        // }
+        //
+        // private void OnDisable()
+        // {
+        //     spaceShipInput.Disable();
+        // }
 
         private void OnDestroy()
         {
-            spaceShipInput.Dispose();
+            if(spaceShipInput != null)
+                spaceShipInput.Dispose();
         }
 
         public void OnMove(InputAction.CallbackContext context)
@@ -92,14 +125,11 @@ namespace SpaceShip
 
         private void FixedUpdate()
         {
+            if (!shipEnabled) return;
+
             //Update the vehicle based on passed state
             UpdateShipState(_pendingInput);
             //Update the camera position based on the passed mouse state (or create another camera script)
-        }
-
-        private void LateUpdate()
-        {
-            //update the shipState
         }
 
         private void UpdateShipState(ShipInput input)
@@ -121,10 +151,10 @@ namespace SpaceShip
                 _shipState.CurrentVisualRoll, targetRollLean, 7 * Time.deltaTime);
         }
 
-        private void OnGUI()
-        {
-            Rect pos = new Rect(10, 10, 500, 500);
-            GUI.Label(pos, $"{_shipState.Position} \n {_shipState.Rotation}");
-        }
+        // private void OnGUI()
+        // {
+        //     Rect pos = new Rect(10, 10, 500, 500);
+        //     GUI.Label(pos, $"{_shipState.Position} \n {_shipState.Rotation}");
+        // }
     }
 }

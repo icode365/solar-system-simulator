@@ -16,6 +16,8 @@ namespace SpaceShip
 
         private void UpdateVisuals()
         {
+            if (controller == null || controller._shipState == null) return;
+            
             var state = controller._shipState;
 
             transform.position = Vector3.SmoothDamp(

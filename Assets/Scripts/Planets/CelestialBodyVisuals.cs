@@ -18,9 +18,11 @@ public class CelestialBodyVisuals : MonoBehaviour
 
         _renderer.material = mat;
     }
+#if UNITY_EDITOR
 
     private void OnDrawGizmos()
     {
         Handles.Label(transform.position + Vector3.up * 2f, gameObject.name);
     }
+#endif
 }

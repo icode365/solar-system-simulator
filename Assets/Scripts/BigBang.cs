@@ -35,7 +35,7 @@ public class BigBang : MonoBehaviour
     public CinematicTimelineConfig cinematicTimelineConfig;
     public HUDController hudController;
 
-    private void Start()
+    public void Bang()
     {
         var solarSystemData = GetSolarSystemData();
         _materialBuilder = new();

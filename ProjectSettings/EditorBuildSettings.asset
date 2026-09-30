@@ -6,8 +6,11 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/OutdoorsScene.unity
-    guid: 8124e5870f4fd4c779e7a5f994e84ad1
+    path: Assets/Scenes/SolarSystemSimulation.unity
+    guid: 6e0765c624215ac4a81c43bc232942da
+  - enabled: 1
+    path: Assets/Scenes/UI.unity
+    guid: e91c254a2127322489724055dfd22d3e
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 80e073f41798f074882474e3ccb36164, type: 3}
   m_UseUCBPForAssetBundles: 0
