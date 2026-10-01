@@ -13,6 +13,7 @@ namespace SpaceShip
         public float TurnSpeed { get; } = 10f;
         public float LeanAmount { get; } = 25f; // For visual tilting
         public float SpeedBootValue { get; } = 2f;
+        public bool IsBoosted { get; set; } = false;
         public float CurrentVisualRoll;
 
         public SpaceShipState()
@@ -121,6 +122,7 @@ namespace SpaceShip
         public void OnSprint(InputAction.CallbackContext context)
         {
             _pendingInput.boostInput = context.performed;
+            _shipState.IsBoosted = context.performed;
         }
 
         private void FixedUpdate()
@@ -134,7 +136,7 @@ namespace SpaceShip
 
         private void UpdateShipState(ShipInput input)
         {
-            var speedBoostMultiplier = input.boostInput ? _shipState.SpeedBootValue : 1;
+            var speedBoostMultiplier = _shipState.IsBoosted ? _shipState.SpeedBootValue : 1;
             var x = input.XYInput.x * _shipState.TurnSpeed * Time.deltaTime;
             var y = input.XYInput.y * _shipState.TurnSpeed * Time.deltaTime;
 
