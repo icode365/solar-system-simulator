@@ -82,17 +82,16 @@ public class BigBang : MonoBehaviour
 
     private void FindNearestPlanet()
     {
-        var nearestPlanet = _nearestPlanetSolver.GetNearestPlanet();
-        var distance = _nearestPlanetSolver.GetDistanceFromNearestPlanet();
+        var targetOrbiter = _nearestPlanetSolver.GetTargetPlanet();
+        var distance = _nearestPlanetSolver.GetDistanceFromTarget(targetOrbiter);
         resolver.SetDistanceToTarget(distance);
 
-        if (lastNearestPlanet != nearestPlanet)
-        {
-            Debug.Log("Nearest Planer Updated : " + nearestPlanet.Data.bodyName + " " +
-                      _nearestPlanetSolver.GetDistanceFromNearestPlanet());
-            lastNearestPlanet = nearestPlanet;
-            resolver.SetTarget(nearestPlanet);
-        }
+        if (lastNearestPlanet == targetOrbiter) return;
+
+        Debug.Log(
+            $"Nearest Planer Updated : {targetOrbiter.Data.bodyName} \n {_nearestPlanetSolver.GetDotProd()} {distance} ");
+        lastNearestPlanet = targetOrbiter;
+        resolver.SetTarget(targetOrbiter);
     }
 
     private void UpdatePlanetPhysics() => activePlanets.ForEach(v => v.PhysicsUpdate());
@@ -101,28 +100,28 @@ public class BigBang : MonoBehaviour
     {
         foreach (var planet in solarSystemData.bodies)
         {
-            if (SolarSystemPlanetIds.Contains(planet.englishName.ToLower()))
+            if (!SolarSystemPlanetIds.Contains(planet.englishName.ToLower()))
+                continue;
+
+            var planetDetails = new CelestialData()
             {
-                var planetDetails = new CelestialData()
-                {
-                    bodyName = planet.englishName,
-                    mass = planet.mass.massValue * SimulationDistanceScale,
-                    position = _sun.GetPosition() + new Vector3(planet.perihelion * SimulationDistanceScale, 0f, 0f),
-                    radius = planet.meanRadius * SimulationScale
-                };
+                bodyName = planet.englishName,
+                mass = planet.mass.massValue * SimulationDistanceScale,
+                position = _sun.GetPosition() + new Vector3(planet.perihelion * SimulationDistanceScale, 0f, 0f),
+                radius = planet.meanRadius * SimulationScale
+            };
 
-                OrbitData orbitData = new()
-                {
-                    eccentricity = planet.eccentricity,
-                    semimajorAxis = planet.semimajorAxis * SimulationDistanceScale,
-                    sideralOrbit = planet.sideralOrbit,
-                    primary = _sun
-                };
+            OrbitData orbitData = new()
+            {
+                eccentricity = planet.eccentricity,
+                semimajorAxis = planet.semimajorAxis * SimulationDistanceScale,
+                sideralOrbit = planet.sideralOrbit,
+                primary = _sun
+            };
 
-                var tex = GetTexFor(planet.englishName.ToLower());
-                var material = _materialBuilder.ApplyMaps(tex);
-                CreatePlanet(planetDetails, orbitData, material);
-            }
+            var tex = GetTexFor(planet.englishName.ToLower());
+            var material = _materialBuilder.ApplyMaps(tex);
+            CreatePlanet(planetDetails, orbitData, material);
         }
     }
 

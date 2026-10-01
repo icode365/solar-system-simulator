@@ -31,7 +31,6 @@ namespace Planets
             base.AddProximityTrigger(this);
         }
 
-
         private float _timer = 0f;
 
         public void PhysicsUpdate()

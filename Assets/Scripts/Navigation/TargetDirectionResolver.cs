@@ -1,6 +1,6 @@
-using System;
 using Planets;
 using SpaceShip;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,7 +15,9 @@ public class TargetDirectionResolver : MonoBehaviour
     [SerializeField] private RectTransform verticalCompassBarRect;
 
     [SerializeField] private RectTransform onScreenMarker;
-    [SerializeField] private Image onScreenMarkerImage;
+    [SerializeField] private TMP_Text onScreenLabel;
+    [SerializeField] private CanvasGroup onScreenMarkerGroup;
+    public float smoothTime = 0.05f;
     public AnimationCurve onScreenMarkerFade;
     public float onScreenMarkerMinVisiableThreshold = 20f;
     public float onScreenMarkerMaxVisiableThreshold = 100f;
@@ -30,7 +32,8 @@ public class TargetDirectionResolver : MonoBehaviour
 
     private void Awake()
     {
-        onScreenMarkerImage = onScreenMarker?.GetComponent<Image>();
+        if (onScreenMarkerGroup == null)
+            onScreenMarkerGroup = onScreenMarker?.GetComponent<CanvasGroup>();
     }
 
     public void SetDistanceToTarget(float distance) => distanceToTarget = distance;
@@ -60,35 +63,42 @@ public class TargetDirectionResolver : MonoBehaviour
 
     private void UpdateOnScreenMarker(Transform ship, Vector3 offset)
     {
+        if (targetTransform == null || targetTransform.Data == null) return;
+ 
         var dotProduct = Vector3.Dot(ship.forward, offset);
-        
+
         if (dotProduct > 0.75f)
         {
-            onScreenMarkerImage.enabled = true;
+            onScreenMarkerGroup.enabled = true;
         }
         else
         {
-            onScreenMarkerImage.enabled = false;
+            onScreenMarkerGroup.enabled = false;
             return;
         }
 
-        var normalizedDistance = (distanceToTarget - onScreenMarkerMinVisiableThreshold) /
+        var normalizedDistance = (distanceToTarget - targetTransform.Data.radius + onScreenMarkerMinVisiableThreshold) /
                                  (onScreenMarkerMaxVisiableThreshold -
                                   onScreenMarkerMinVisiableThreshold);
 
-        var alpha = onScreenMarkerFade.Evaluate(normalizedDistance * dotProduct );
-        var color = onScreenMarkerImage.color;
-        onScreenMarkerImage.color = new Color(color.r, color.g, color.b, alpha);
+        var alpha = onScreenMarkerFade.Evaluate(normalizedDistance * dotProduct);
+        onScreenMarkerGroup.alpha = alpha;
 
         var lerpedPos = LerpPosition(onScreenMarker.position, targetScreenPoint);
         onScreenMarker.position = lerpedPos;
+        UpdateDistanceLabel(targetTransform.Data.bodyName, distanceToTarget);
+    }
+
+    private void UpdateDistanceLabel(string orbiterName, float distance)
+    {
+        onScreenLabel.text = orbiterName + "\n " + distance.ToString("00000.00") + "km";
     }
 
     private Vector3 _currentVelocity;
 
     private Vector3 LerpPosition(Vector3 from, Vector3 to)
     {
-        return Vector3.SmoothDamp(from, to, ref _currentVelocity, 0.2f);
+        return Vector3.SmoothDamp(from, to, ref _currentVelocity, smoothTime);
     }
 
     private void UpdateMarker(RectTransform marker, RectTransform compassRect, float angle, Vector2 markerPos,
@@ -101,22 +111,20 @@ public class TargetDirectionResolver : MonoBehaviour
         {
             marker.gameObject.SetActive(false);
             onScreenMarker.gameObject.SetActive(true);
-            // onScreenMarker.position = markerPos;
         }
         else
         {
             marker.gameObject.SetActive(true);
-            // onScreenMarker.gameObject.SetActive(false);
 
             // Calculate position on the tape
             if (isHorizontal)
             {
-                float xPos = angle; // * compassRect.rect.width;
+                float xPos = angle;
                 marker.position = new Vector2(xPos, marker.position.y);
             }
             else
             {
-                float yPos = angle; // * compassRect.rect.height;
+                float yPos = angle;
                 marker.position = new Vector2(marker.position.x, yPos);
             }
         }
